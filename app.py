@@ -62,7 +62,7 @@ REGION_CONFIGS = {
     }
 }
 
-# External API URLs
+# External API URLs (keep as is, but may need update if endpoints change)
 EAT_TOKEN_URL = "https://ticket.kiosgamer.co.id"
 ACCESS_TO_JWT_URL = "https://jwt-mbv3.vercel.app/access-jwt?access_token={access_token}"
 GUEST_TO_JWT_URL = "https://jwt-mbv3.vercel.app/token?uid={uid}&password={password}"
@@ -175,7 +175,6 @@ def process_eat_token(eat_token):
         # Try to extract from text
         text = access_response.text
         if 'access_token' in text:
-            # Try to parse access token from response
             import re
             match = re.search(r'access_token["\']?:\s*["\']([^"\']+)["\']', text)
             if match:
@@ -982,19 +981,10 @@ def health_check():
     }), 200
 
 # -----------------------------
-# Run Server
+# Run Server (Fixed for Railway)
 # -----------------------------
 if __name__ == '__main__':
-    print("Starting Free Fire Friend Manager...")
-    print(f"Server running on: http://localhost:5000")
-    print(f"API endpoints:")
-    print(f"  POST /api/process-token       - Process tokens")
-    print(f"  GET  /api/get-player-info     - Get player info (sync)")
-    print(f"  GET  /api/get-player-info-async - Get player info (async)")
-    print(f"  GET  /adding_friend           - Add friend")
-    print(f"  GET  /remove_friend           - Remove friend")
-    print(f"  GET  /api/friends             - Get friends list")
-    print(f"  GET  /get_friends_list        - Get friends list (legacy)")
-    print(f"  GET  /health                  - Health check")
-    print("\nMake sure index.html is in the same directory!")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Get port from environment variable (Railway sets this)
+    port = int(os.environ.get('PORT', 5000))
+    # For production, debug must be False
+    app.run(host='0.0.0.0', port=port, debug=False)
